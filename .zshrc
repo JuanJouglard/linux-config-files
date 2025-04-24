@@ -131,29 +131,33 @@ autoload -U compinit && compinit
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
- alias vim="nvim"
- alias install="sudo apt install"
- alias pdf="gio open"
- alias -s sh="vi"
- alias nvimconf="nvim ~/.config/nvim"
- alias fastrep="vlc --rate=2"
- alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
- export PATH=/home/juanjou/Android/Sdk/platform-tools:$PATH
- export PATH=/home/juanjou/bin:$PATH
- alias startvpn="sudo openvpn --config ~/Development/neocomplexx/jjouglard.ovpn"
- alias connectandroid="ssh juanjou@192.168.0.111 -p 2222"
- alias removelocalbranches="git branch --merged >/tmp/merged-branches && vi /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
+alias vim="nvim"
+alias install="sudo apt install"
+alias pdf="gio open"
+alias -s sh="vi"
+alias nvimconf="nvim ~/.config/nvim"
+alias fastrep="vlc --rate=2"
+alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+export PATH=/home/juanjou/Android/Sdk/platform-tools:$PATH
+export PATH=/home/juanjou/bin:$PATH
+alias startvpn="sudo openvpn --config ~/Development/neocomplexx/jjouglard.ovpn"
+alias connectandroid="ssh juanjou@192.168.0.111 -p 2222"
+alias removelocalbranches="git branch --merged >/tmp/merged-branches && vi /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
+alias cat="bat"
 
- #alias pullallsd = "find . -type d -mindepth 2 -maxdepth 3 -exec echo git --git-dir={}/.git --work-tree=$PWD/{} status \; "
+#alias pullallsd = "find . -type d -mindepth 2 -maxdepth 3 -exec echo git --git-dir={}/.git --work-tree=$PWD/{} status \; "
 
 
- # Git bindings
- alias commitall="git add . && git commit -m "
- alias lol="git log --oneline"
+# Git bindings
+alias commitall="git add . && git commit -m "
+alias lol="git log --oneline"
 
- alias -s js=vim
- alias -s ts=vim
- alias listalias="grep alias ~/.zshrc"
+alias -s js=vim
+alias -s ts=vim
+alias listalias="grep alias ~/.zshrc"
 
- # Configuration
- alias editzsh="vim ~/.zshrc"
+# Configuration
+alias editzsh="vim ~/.zshrc"
+
+alias restartaudio="systemctl --user restart pipewire{,-pulse}"
+export PATH=$PATH:/snap/bin
