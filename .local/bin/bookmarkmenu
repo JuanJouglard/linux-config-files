@@ -1,0 +1,14 @@
+#!/bin/zsh
+BOOKMARKS="$HOME/.local/share/bookmarks/urls.txt"
+
+# Read selection from dmenu
+CHOICE=$(cat "$BOOKMARKS" | cut -d'|' -f1 | wofi  -i -l 100)
+
+# If no choice, exit
+[[ -z "$CHOICE" ]] && exit 1
+
+# Extract the URL
+URL=$(grep "^$CHOICE" "$BOOKMARKS" | cut -d'|' -f2)
+
+# Open in browser
+firefox "$URL"
