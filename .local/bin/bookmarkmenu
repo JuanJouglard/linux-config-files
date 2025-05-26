@@ -11,6 +11,17 @@ COMPLETE_PATH="$HOME/.local/share/bookmarks/$SUB_FILE"
 
 CHOICE=$(cat "$COMPLETE_PATH" | cut -d'|' -f1 | wofi  -i -l 100 --prompt $CHOICE)
 
+[[ -z "$CHOICE" ]] && exit 1
+
 URL=$(grep "^$CHOICE" "$COMPLETE_PATH" | cut -d'|' -f2)
 
-firefox "$URL"
+echo "URL $URL"
+
+
+if [[ -n $URL ]]
+then
+    firefox "$URL"
+else
+    echo "No match"
+fi
+
