@@ -1,27 +1,33 @@
 #!/bin/zsh
-BOOKMARKS="$HOME/.local/share/bookmarks/main.txt"
 
-CHOICE=$(cat "$BOOKMARKS" | cut -d'|' -f1 | wofi  -i -l 100)
+BOOKMARKS_DIR="$HOME/.local/share/bookmarks"
+CURRENT_FILE="$BOOKMARKS_DIR/main.txt"
+PROMPT="Select"
 
-[[ -z "$CHOICE" ]] && exit 1
+while true; do
+  # Show options
+  CHOICE=$(cut -d'|' -f1 "$CURRENT_FILE" | wofi -i -l 100 --prompt "$PROMPT")
 
-SUB_FILE=$(grep "^$CHOICE" "$BOOKMARKS" | cut -d'|' -f2 | awk '{$1=$1};1')
+  # Exit if nothing selected
+  [[ -z "$CHOICE" ]] && exit 1
 
-COMPLETE_PATH="$HOME/.local/share/bookmarks/$SUB_FILE"
+  # Get second field (the value)
+  VALUE=$(grep "^$CHOICE" "$CURRENT_FILE" | cut -d'|' -f2- | awk '{$1=$1};1')
 
-CHOICE=$(cat "$COMPLETE_PATH" | cut -d'|' -f1 | wofi  -i -l 100 --prompt $CHOICE)
+  # Check if VALUE is a URL
+  if [[ "$VALUE" =~ ^https?:// ]]; then
+    firefox "$VALUE"
+    exit 0
+  fi
 
-[[ -z "$CHOICE" ]] && exit 1
-
-URL=$(grep "^$CHOICE" "$COMPLETE_PATH" | cut -d'|' -f2)
-
-echo "URL $URL"
-
-
-if [[ -n $URL ]]
-then
-    firefox "$URL"
-else
-    echo "No match"
-fi
+  # Otherwise, assume it's a file and go deeper
+  NEXT_FILE="$BOOKMARKS_DIR/$VALUE"
+  if [[ -f "$NEXT_FILE" ]]; then
+    CURRENT_FILE="$NEXT_FILE"
+    PROMPT="$CHOICE"
+  else
+    echo "Invalid selection or file not found: $NEXT_FILE"
+    exit 1
+  fi
+done
 
