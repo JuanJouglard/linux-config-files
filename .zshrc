@@ -144,6 +144,7 @@ alias startvpn="sudo openvpn --config ~/Development/neocomplexx/jjouglard.ovpn"
 alias connectandroid="ssh juanjou@192.168.0.111 -p 2222"
 alias removelocalbranches="git branch --merged >/tmp/merged-branches && vi /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
 alias cat="bat"
+alias ls="lsd"
 
 #alias pullallsd = "find . -type d -mindepth 2 -maxdepth 3 -exec echo git --git-dir={}/.git --work-tree=$PWD/{} status \; "
 
@@ -158,6 +159,8 @@ alias listalias="grep alias ~/.zshrc"
 
 # Configuration
 alias editzsh="vim ~/.zshrc"
+alias clipboard="xclip -selection clipboard"
 
 alias restartaudio="systemctl --user restart pipewire{,-pulse}"
 export PATH=$PATH:/snap/bin
+alias claude="/home/jj/.claude/local/claude"
