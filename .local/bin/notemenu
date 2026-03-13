@@ -1,0 +1,44 @@
+#!/bin/zsh
+
+NOTES_DIR="$HOME/honeydew/notes"
+NVIM="$HOME/.config/nvim/nvim-linux64/bin/nvim"
+
+# Build note types from subdirectories, excluding date folders (YYYY)
+NOTE_TYPES=("general")
+for dir in "$NOTES_DIR"/*/; do
+  dirname=$(basename "$dir")
+  [[ "$dirname" =~ ^[0-9]{4}$ ]] && continue
+  NOTE_TYPES+=("$dirname")
+done
+
+# Show wofi menu
+SELECTION=$(printf '%s\n' "${NOTE_TYPES[@]}" | wofi -i --prompt "Note type")
+
+[[ -z "$SELECTION" ]] && exit 1
+
+# Create date-based directory
+DATE_DIR="$NOTES_DIR/$(date +%Y/%m/%d)"
+mkdir -p "$DATE_DIR"
+
+# Generate timestamped filename
+FILENAME="$(date +%Y-%m-%d_%H%M%S).md"
+FILEPATH="$DATE_DIR/$FILENAME"
+
+# Open nvim in a terminal and wait for it to close
+gnome-terminal --wait -- "$NVIM" "$FILEPATH"
+
+# Clean up if the note is empty or was never saved
+if [[ ! -s "$FILEPATH" ]]; then
+  rm -f "$FILEPATH"
+  exit 0
+fi
+
+# Only create symlink for typed notes (not General)
+if [[ "$SELECTION" != "general" ]]; then
+  TYPE_DIR="$NOTES_DIR/$SELECTION"
+  mkdir -p "$TYPE_DIR"
+  YEAR=$(date +%Y)
+  MONTH=$(date +%m)
+  DAY=$(date +%d)
+  ln -s "../$YEAR/$MONTH/$DAY/$FILENAME" "$TYPE_DIR/$FILENAME"
+fi

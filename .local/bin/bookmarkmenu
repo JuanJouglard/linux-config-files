@@ -14,6 +14,23 @@ while true; do
   # Get second field (the value)
   VALUE=$(grep "^$CHOICE" "$CURRENT_FILE" | cut -d'|' -f2- | awk '{$1=$1};1')
 
+  # Check if VALUE is RECENT
+  if [[ "$VALUE" == "RECENT" ]]; then
+    # Create temporary file with recent Firefox history
+    TEMP_FILE=$(mktemp)
+    sqlite3 ~/.mozilla/firefox/*.default-release/places.sqlite "SELECT COALESCE(title, url), url FROM moz_places WHERE url NOT LIKE 'moz-%' ORDER BY last_visit_date DESC LIMIT 100;" | while IFS='|' read -r title url; do
+      # Clean up title and truncate if too long
+      clean_title=$(echo "$title" | sed 's/[|]/ /g' | cut -c1-60)
+      if [[ ${#title} -gt 60 ]]; then
+        clean_title="${clean_title}..."
+      fi
+      echo "$clean_title|$url" >> "$TEMP_FILE"
+    done
+    CURRENT_FILE="$TEMP_FILE"
+    PROMPT="$CHOICE"
+    continue
+  fi
+
   # Check if VALUE is a URL
   if [[ "$VALUE" =~ ^https?:// ]]; then
     firefox "$VALUE"

@@ -163,4 +163,17 @@ alias clipboard="xclip -selection clipboard"
 
 alias restartaudio="systemctl --user restart pipewire{,-pulse}"
 export PATH=$PATH:/snap/bin
-alias claude="/home/jj/.claude/local/claude"
+eval "$(starship init zsh)"
+
+
+#Claude aliases
+function commit_with_claude {
+  if [[ "$1" == "--staged" ]]; then
+    claude "Generate commit with appropriate message based on staged changes only. Use 'git commit' (not 'git add' first) to commit only the currently staged files. Don't add a watermark" --allowedTools "Bash(git:*)" -p
+  else
+    claude "Generate commit with appropriate message based on all changes. Stage all changes first with 'git add .' then commit. Don't add a watermark" --allowedTools "Bash(git:*)" -p
+  fi
+}
+
+export PATH="/home/jj/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
